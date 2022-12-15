@@ -41,6 +41,7 @@ class Jogada:
         for dice in self.__dices_list:
             dice.roll_dice()
 
+
 if __name__ == '__main__':
     aux = Jogada('4d20')
     print(aux.dices_list)
