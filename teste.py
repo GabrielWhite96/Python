@@ -1,4 +1,4 @@
-from util import *
+from assets.util import *
 
 receive_answer = lambda: input("Digite o código dos dados (numero de dados + letra d + valor do dado): ")
 
