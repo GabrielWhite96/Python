@@ -14,25 +14,15 @@ pygame.mixer.music.set_volume(0.1)
 coli_sound = pygame.mixer.Sound('smb3_coin.wav')
 coli_sound.set_volume(0.1)
 
+# background_image = pygame.image.load('2.png')
+
 width_screen = 400
 heigh_screen = 440
 
-font = pygame.font.SysFont('arial', 20, True, False)
-points = 0
-high_points = 0
+screen = pygame.display.set_mode((width_screen, heigh_screen))
 
-clock = pygame.time.Clock()
-
-snake_length = 5
-
-died = False
-
-snake_list = []
-
-font_2 = pygame.font.SysFont('arial', 20, True, True)
-died_msg = "Game Over! Pressione a tecla R para jogar novamente ou ESQ para sair"
-formated_die_text = font_2.render(died_msg, True, (255, 255, 255))
-rect_text = formated_die_text.get_rect()
+# auxHeigh = True
+# auxY = 0
 
 speed = 20
 x_control = speed
@@ -42,10 +32,25 @@ y_snake = int((heigh_screen/2)//20*20)
 x_apple = randint(0, 380)//20 * 20
 y_apple = randint(40, 420)//20 * 20
 
+font = pygame.font.SysFont('arial', 20, True, False)
+points = 0
+
+clock = pygame.time.Clock()
+
+snake_length = 5
+
+died = False
+
+snake_list = []
+
 def add_snake(snake_list):
   for XandY in snake_list:
     pygame.draw.rect(screen, (0, 200, 50), (XandY[0],XandY[1] , 20, 20))
 
+font_2 = pygame.font.SysFont('arial', 20, True, True)
+died_msg = "Game Over! Pressione a tecla R para jogar novamente ou ESQ para sair"
+formated_die_text = font_2.render(died_msg, True, (255, 255, 255))
+rect_text = formated_die_text.get_rect()
 
 def restart_game():
   global points, snake_length, x_snake, y_snake, x_apple, y_apple, head_list, snake_list, died, x_control, y_control
@@ -61,16 +66,15 @@ def restart_game():
   x_control = speed
   y_control = 0
 
-screen = pygame.display.set_mode((width_screen, heigh_screen))
-
 while True:
   screen.fill((0, 0, 0))
   clock.tick(10)
   
   msg_points = f'Pontos: {points}'
-  msg_high_points = f'Maior Pontuação-: {high_points}'
   formated_text = font.render(msg_points, True, (255, 255, 255))
   
+  # screen.blit(background_image, (0, 0))
+
   for event in pygame.event.get():
     if event.type == QUIT:
       pygame.quit()
@@ -107,6 +111,35 @@ while True:
     
   x_snake = x_snake + x_control
   y_snake = y_snake + y_control
+  # if pygame.key.get_pressed()[K_w]:
+  #   y_snake = y_snake - 10
+  # if pygame.key.get_pressed()[K_a]:
+  #   x_snake = x_snake - 10
+  # if pygame.key.get_pressed()[K_s]:
+  #   y_snake = y_snake + 10
+  # if pygame.key.get_pressed()[K_d]:
+  #   x_snake = x_snake + 10
+      
+
+  # rect_orange = pygame.draw.rect(screen, (255, 100, 0), (200, 300, 50, 50))
+  # circle_blue = pygame.draw.circle(screen, (0, 100, 255), (300, 325), 25)
+  # line_green = pygame.draw.line(screen, (50, 255, 50), (350, 200), (350, 450), 5)
+  # pygame.draw.line(screen, (50, 255, 50), (400, 300), (450, 300), 2)
+  # pygame.draw.line(screen, (10, 255, 50), (450, 300), (450, 350), 2)
+  # pygame.draw.line(screen, (50, 255, 50), (450, 350), (400, 350), 2)
+  # pygame.draw.line(screen, (50, 255, 50), (400, 350), (400, 300), 2)
+
+  # pygame.draw.rect(screen, (255, 0, 0), (500, auxY, 50, 50))
+  # if auxHeigh:
+  #   if auxY <= heigh_screen-50:
+  #     auxY = auxY + 3
+  #   else:
+  #     auxHeigh = False
+  # else:
+  #   if auxY >= 0:
+  #     auxY = auxY - 3
+  #   else:
+  #     auxHeigh = True
   
   head_list = []
   head_list.append(x_snake)
@@ -125,11 +158,6 @@ while True:
   if apple.colliderect(snake):
     x_apple = randint(0, 380)//20 * 20
     y_apple = randint(40, 420)//20 * 20
-    for XY in snake_list:
-      if x_apple == XY[0]:
-        x_apple = randint(0, 380)//20 * 20
-      if y_apple == XY[1]:
-        y_apple = randint(40, 380)//20 * 20
     points = points + 1
     coli_sound.play()
     snake_length = snake_length + 2
