@@ -7,7 +7,6 @@ pygame.init()
 
 pygame.display.set_caption('Game')
 
-
 back_music = pygame.mixer.music.load('backMusic.mp3')
 pygame.mixer.music.play(-1)
 pygame.mixer.music.set_volume(0.1)
@@ -155,6 +154,10 @@ while True:
     snake_length = snake_length + 2
     
   if snake_list.count(head_list) > 1:
+    font_2 = pygame.font.SysFont('arial', 20, True, True)
+    died_msg = 'Game Over! Pressione a tecla R para jogar novamente\nou ESQ para sair'
+    formated_die_text = font_2.render(died_msg, True, (255, 255, 255))
+    rect_text = formated_die_text.get_rect()
     died = True
     while died:
       screen.fill((50, 0, 0))
@@ -162,12 +165,14 @@ while True:
         if event.type == QUIT:
           pygame.quit()
           exit()
-        if event.key == K_ESCAPE:
-          pygame.quit()
-          exit()
         if event.type == KEYDOWN:
+          if event.key == K_ESCAPE:
+            pygame.quit()
+            exit()
           if event.key == K_r:
             restart_game()
+      rect_text.center = (width_screen//2, heigh_screen//2)
+      screen.blit(formated_die_text, (rect_text))
       pygame.display.update()
   
   
