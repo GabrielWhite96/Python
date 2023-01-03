@@ -80,25 +80,25 @@ while True:
       if event.key == K_ESCAPE:
         pygame.quit()
         exit()
-      if event.key == K_w:
+      if event.key == K_UP:
         if y_control == speed:
           pass
         else:
           x_control = 0
           y_control = -speed
-      if event.key == K_a:
+      if event.key == K_LEFT:
         if x_control == speed:
           pass
         else:
           x_control = -speed
           y_control = 0
-      if event.key == K_s:
+      if event.key == K_DOWN:
         if y_control == -speed:
           pass
         else:
           x_control = 0
           y_control = speed
-      if event.key == K_d:
+      if event.key == K_RIGHT:
         if x_control == -speed:
           pass
         else:
