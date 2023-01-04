@@ -174,12 +174,11 @@ for i in range(2):
     pipe_group.add(pipes[1])
 
 def restart_game():
+    global bird_group, ground_group, pipe_group, bird, ground, pipes, DIED, START
     
-    bird_group.remove(bird)
-    ground_group.remove(ground[0])
-    ground_group.remove(ground[1])
-    pipe_group.remove(pipes[0])
-    pipe_group.remove(pipes[1])
+    bird_group.empty()
+    ground_group.empty()
+    pipe_group.empty()
     
     bird = Bird()
     bird_group.add(bird)
@@ -192,6 +191,9 @@ def restart_game():
         pipes = get_random_pipes(WIDTH_SCREEN * i + 800)
         pipe_group.add(pipes[0])
         pipe_group.add(pipes[1])
+    
+    DIED = False
+    START = False
 
 while True:
     clock.tick(30)
