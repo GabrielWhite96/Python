@@ -28,6 +28,7 @@ colide_sound.set_volume(0.1)
 bump_sound.set_volume(0.1)
 
 START = False
+PERSONALIZE = False
 DIED = False
 FALLING_SPEED = 10
 GRAVITY = 1
@@ -40,7 +41,30 @@ PIPE_WIDTH = 80
 PIPE_HEIGHT = 500
 PIPE_GAP = 200
 
+class Personalize_game(pygame.sprite.Sprite):
+    def __init__(self):
+        pygame.sprite.Sprite.__init__(self)
 
+class Personalize_button(pygame.sprite.Sprite):
+    
+    def __init__(self):
+        pygame.sprite.Sprite.__init__(self)
+
+        self.image = pygame.image.load('assets/sprites/personalizar_button.png').convert_alpha()
+        self.image = pygame.transform.scale(self.image, (156, 40))
+        self.rect = self.image.get_rect()
+        
+        
+        
+    def update(self):
+        global PERSONALIZE
+        self.mouse = pygame.mouse.get_pressed()
+        self.mousePos = pygame.mouse.get_pos()
+        
+        if self.rect.collidepoint(self.mousePos):
+            if self.mouse[0]:
+                PERSONALIZE = True
+        
 class Point(pygame.sprite.Sprite):
     
     def __init__(self):
@@ -76,15 +100,15 @@ class Bird(pygame.sprite.Sprite):
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
 
-        self.images = [pygame.image.load('assets//sprites//pink1.png').convert_alpha(),
-                       pygame.image.load('assets//sprites//pink2.png').convert_alpha(),
-                       pygame.image.load('assets//sprites//pink3.png').convert_alpha()]
+        self.images = [pygame.image.load('assets//sprites//white1.png').convert_alpha(),
+                       pygame.image.load('assets//sprites//white2.png').convert_alpha(),
+                       pygame.image.load('assets//sprites//white3.png').convert_alpha()]
 
         self.FALLING_SPEED = FALLING_SPEED
 
         self.current_image = 0
 
-        self.image = pygame.image.load('assets//sprites//pink1.png').convert_alpha()
+        self.image = pygame.image.load('assets//sprites//white1.png').convert_alpha()
         self.mask = pygame.mask.from_surface(self.image)
 
         self.rect = self.image.get_rect()
@@ -158,6 +182,10 @@ def get_random_pipes(xpos):
 #     point_group.add(point[0])
 #     point_group.add(point[1])
 
+personalize_button_group = pygame.sprite.Group()
+personalize_button = Personalize_button()
+personalize_button_group.add(personalize_button)
+
 bird_group = pygame.sprite.Group()
 bird = Bird()
 bird_group.add(bird)
@@ -174,12 +202,14 @@ for i in range(2):
     pipe_group.add(pipes[1])
 
 def restart_game():
-    global bird_group, ground_group, pipe_group, bird, ground, pipes, DIED, START
+    global bird_group, ground_group, pipe_group, bird, ground, pipes, DIED, START, personalize_button, personalize_button_group
     
     bird_group.empty()
     ground_group.empty()
     pipe_group.empty()
     
+    personalize_button = Personalize_button()
+    personalize_button_group.add(personalize_button)
     bird = Bird()
     bird_group.add(bird)
 
@@ -198,7 +228,7 @@ def restart_game():
 while True:
     clock.tick(30)
     screen.blit(BACKGROUND, (0, 0))
-    
+        
     for event in pygame.event.get():
         if event.type == QUIT:
             pygame.quit()
@@ -208,8 +238,7 @@ while True:
                 START = True
                 bump_sound.play()
                 bird.bump()
-
-
+                
     if is_off_screen(ground_group.sprites()[0]):
         ground_group.remove(ground_group.sprites()[0])
 
@@ -227,16 +256,23 @@ while True:
         
     pipe_group.draw(screen)
     ground_group.draw(screen)
+    personalize_button_group.draw(screen)
+    personalize_button_group.update()
     
     if START:
+        personalize_button_group.empty()
+        
         bird_group.update()
         ground_group.update()
         pipe_group.update()
 
         bird_group.draw(screen)
     else:
-        screen.blit(MENU, ((WIDTH_SCREEN/2)-92, (HEIGHT_SCREEN/2)-150))
-        # pygame.Surface.blit(screen, MENU, (0, 0))
+        if PERSONALIZE:
+            screen.fill((255,255,255))
+            
+        else:
+            screen.blit(MENU, ((WIDTH_SCREEN/2)-92, (HEIGHT_SCREEN/2)-150))
         
     pygame.display.update()
     
