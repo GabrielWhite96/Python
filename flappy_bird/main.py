@@ -29,6 +29,8 @@ bump_sound.set_volume(0.1)
 
 START = False
 PERSONALIZE = False
+PERSONALIZE_BIRD = False
+PERSONALIZE_BACKGROUND = False
 DIED = False
 FALLING_SPEED = 10
 GRAVITY = 1
@@ -41,9 +43,49 @@ PIPE_WIDTH = 80
 PIPE_HEIGHT = 500
 PIPE_GAP = 200
 
-class Personalize_game(pygame.sprite.Sprite):
+class Personalize_bird(pygame.sprite.Sprite):
+    
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
+        
+        self.image = pygame.image.load('assets/sprites/bird.png').convert_alpha()
+        self.image = pygame.transform.scale(self.image, (100, 100))
+        self.rect = self.image.get_rect()
+        
+        self.rect[0] = 80
+        self.rect[1] = 150
+        
+        def update(self):
+            global PERSONALIZE_BIRD
+            
+            self.mouse = pygame.mouse.get_pressed()
+            self.mousePos = pygame.mouse.get_pos()           
+            
+            if self.rect.collidepoint(self.mousePos):
+                if self.mouse[0]:
+                    PERSONALIZE_BIRD = True
+
+class Personalize_background(pygame.sprite.Sprite):
+    
+    def __init__(self):
+        pygame.sprite.Sprite.__init__(self)
+        
+        self.image = pygame.image.load('assets/sprites/background.png').convert_alpha()
+        self.image = pygame.transform.scale(self.image, (100, 100))
+        self.rect = self.image.get_rect()
+        
+        self.rect[0] = WIDTH_SCREEN - 180
+        self.rect[1] = 150
+        
+        def update(self):
+            global PERSONALIZE_BACKGROUND
+            
+            self.mouse = pygame.mouse.get_pressed()
+            self.mousePos = pygame.mouse.get_pos()           
+            
+            if self.rect.collidepoint(self.mousePos):
+                if self.mouse[0]:
+                    PERSONALIZE_BACKGROUND = True
 
 class Personalize_button(pygame.sprite.Sprite):
     
@@ -54,10 +96,12 @@ class Personalize_button(pygame.sprite.Sprite):
         self.image = pygame.transform.scale(self.image, (156, 40))
         self.rect = self.image.get_rect()
         
-        
+        self.rect[0] = 10
+        self.rect[1] = 10
         
     def update(self):
         global PERSONALIZE
+        
         self.mouse = pygame.mouse.get_pressed()
         self.mousePos = pygame.mouse.get_pos()
         
@@ -186,6 +230,14 @@ personalize_button_group = pygame.sprite.Group()
 personalize_button = Personalize_button()
 personalize_button_group.add(personalize_button)
 
+personalize_bird_group = pygame.sprite.Group()
+personalize_bird = Personalize_bird()
+personalize_bird_group.add(personalize_bird)
+
+personalize_background_group = pygame.sprite.Group()
+personalize_background = Personalize_background()
+personalize_background_group.add(personalize_background)
+
 bird_group = pygame.sprite.Group()
 bird = Bird()
 bird_group.add(bird)
@@ -269,8 +321,16 @@ while True:
         bird_group.draw(screen)
     else:
         if PERSONALIZE:
-            screen.fill((255,255,255))
+            personalize_button_group.empty()
+            personalize_bird_group.draw(screen)
+            personalize_background_group.draw(screen)
+            personalize_bird_group.update()
+            personalize_background_group.update()
             
+            if PERSONALIZE_BIRD:
+                screen.fill((0,0,0))
+            elif PERSONALIZE_BACKGROUND:
+                screen.fill((255,255,255))
         else:
             screen.blit(MENU, ((WIDTH_SCREEN/2)-92, (HEIGHT_SCREEN/2)-150))
         
