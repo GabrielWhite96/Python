@@ -31,8 +31,9 @@ START = False
 PERSONALIZE = False
 PERSONALIZE_BIRD = False
 BLACK_BIRD = False
-WHITE_BIRD = True
+WHITE_BIRD = False
 PINK_BIRD = False
+COLOR_BIRD = 'white'
 PERSONALIZE_BACKGROUND = False
 DIED = False
 FALLING_SPEED = 10
@@ -44,79 +45,35 @@ GROUND_HEIGHT = 100
 
 PIPE_WIDTH = 80
 PIPE_HEIGHT = 500
-PIPE_GAP = 200
+PIPE_GAP = 150
 
-class White_bird(pygame.sprite.Sprite):
+# pygame.time.set_timer(pygame.TIMER, 1000)
+# if event.type == pygame.TIMER:
+
+class Color_bird(pygame.sprite.Sprite):
     
-    def __init__(self):
+    def __init__(self, color, width, height):
         pygame.sprite.Sprite.__init__(self)
         
-        self.image = pygame.image.load('assets/sprites/white1.png')
-        self.image = pygame.transform.scale(self.image, (68, 48))
+        self.image = pygame.image.load('assets/sprites/'+color+'_bird.png')
+        self.image = pygame.transform.scale(self.image, (100, 100))
         self.rect = self.image.get_rect()
         
-        self.rect[0] = (WIDTH_SCREEN/4)
-        self.rect[1] = 300
+        self.color = color
+        self.rect[0] = width
+        self.rect[1] = height
         
     def update(self):
-        global WHITE_BIRD, BLACK_BIRD, PINK_BIRD
+        global COLOR_BIRD, PERSONALIZE, PERSONALIZE_BIRD
         
         self.mouse = pygame.mouse.get_pressed()
         self.mousePos = pygame.mouse.get_pos()
         
         if self.rect.collidepoint(self.mousePos):
             if self.mouse[0]:
-                WHITE_BIRD = True
-                BLACK_BIRD = False
-                PINK_BIRD = False
-                
-class Pink_bird(pygame.sprite.Sprite):
-    
-    def __init__(self):
-        pygame.sprite.Sprite.__init__(self)
-        
-        self.image = pygame.image.load('assets/sprites/pink1.png')
-        self.image = pygame.transform.scale(self.image, (68, 48))
-        self.rect = self.image.get_rect()
-        
-        self.rect[0] = (WIDTH_SCREEN/4)+(2*(WIDTH_SCREEN/4))-68
-        self.rect[1] = 300
-        
-    def update(self):
-        global PINK_BIRD, BLACK_BIRD, WHITE_BIRD
-        
-        self.mouse = pygame.mouse.get_pressed()
-        self.mousePos = pygame.mouse.get_pos()
-        
-        if self.rect.collidepoint(self.mousePos):
-            if self.mouse[0]:
-                PINK_BIRD = True
-                BLACK_BIRD = False
-                WHITE_BIRD = False
-                
-class Black_bird(pygame.sprite.Sprite):
-    
-    def __init__(self):
-        pygame.sprite.Sprite.__init__(self)
-        
-        self.image = pygame.image.load('assets/sprites/black1.png')
-        self.image = pygame.transform.scale(self.image, (68, 48))
-        self.rect = self.image.get_rect()
-        
-        self.rect[0] = 100
-        self.rect[1] = 400
-        
-    def update(self):
-        global BLACK_BIRD, PINK_BIRD, WHITE_BIRD
-        
-        self.mouse = pygame.mouse.get_pressed()
-        self.mousePos = pygame.mouse.get_pos()
-        
-        if self.rect.collidepoint(self.mousePos):
-            if self.mouse[0]:
-                BLACK_BIRD = True
-                WHITE_BIRD = False
-                PINK_BIRD = False
+                COLOR_BIRD = self.color
+                PERSONALIZE = False
+                PERSONALIZE_BIRD = False
 
 class Personalize_bird(pygame.sprite.Sprite):
     
@@ -133,12 +90,8 @@ class Personalize_bird(pygame.sprite.Sprite):
     def update(self):
         global PERSONALIZE_BIRD
         
-        self.mouse = pygame.mouse.get_pressed()
-        self.mousePos = pygame.mouse.get_pos()           
-        
-        if self.rect.collidepoint(self.mousePos):
-            if self.mouse[0]:
-                PERSONALIZE_BIRD = True
+        if pygame.mouse.get_pressed()[0] and self.rect.collidepoint(pygame.mouse.get_pos()):
+            PERSONALIZE_BIRD = True
 
 class Personalize_background(pygame.sprite.Sprite):
     
@@ -215,12 +168,14 @@ class Point(pygame.sprite.Sprite):
             self.point_aux = self.point_aux + 1
 
 def select_bird():
-    if WHITE_BIRD:
+    if COLOR_BIRD == 'white':
         return [pygame.image.load('assets//sprites//white1.png').convert_alpha(),pygame.image.load('assets//sprites//white2.png').convert_alpha(),pygame.image.load('assets//sprites//white3.png').convert_alpha()]
-    elif BLACK_BIRD:
+    elif COLOR_BIRD == 'black':
         return [pygame.image.load('assets//sprites//black1.png').convert_alpha(),pygame.image.load('assets//sprites//black2.png').convert_alpha(),pygame.image.load('assets//sprites//black3.png').convert_alpha()]
-    elif PINK_BIRD:
+    elif COLOR_BIRD == 'pink':
         return [pygame.image.load('assets//sprites//pink1.png').convert_alpha(),pygame.image.load('assets//sprites//pink2.png').convert_alpha(),pygame.image.load('assets//sprites//pink3.png').convert_alpha()]
+    elif COLOR_BIRD == 'green':
+        return [pygame.image.load('assets//sprites//green1.png').convert_alpha(),pygame.image.load('assets//sprites//green2.png').convert_alpha(),pygame.image.load('assets//sprites//green3.png').convert_alpha()]
         
 class Bird(pygame.sprite.Sprite):
 
@@ -242,7 +197,7 @@ class Bird(pygame.sprite.Sprite):
 
     def update(self):
         self.current_image = (self.current_image + 1) % 3
-        self.image = self.images[ self.current_image ]
+        self.image = self.images[self.current_image]
         self.image = pygame.transform.rotate(self.image, -1.5 * self.FALLING_SPEED)
 
         self.FALLING_SPEED += GRAVITY
@@ -306,18 +261,15 @@ def get_random_pipes(xpos):
 #     point = Point()
 #     point_group.add(point[0])
 #     point_group.add(point[1])
-
-black_bird_group = pygame.sprite.Group()
-black_bird = Black_bird()
-black_bird_group.add(black_bird)
-
-white_bird_group = pygame.sprite.Group()
-white_bird = White_bird()
-white_bird_group.add(white_bird)
-
-pink_bird_group = pygame.sprite.Group()
-pink_bird = Pink_bird()
-pink_bird_group.add(pink_bird)
+color_bird_group = pygame.sprite.Group()
+color_bird_white = Color_bird('white', WIDTH_SCREEN/4, 100)
+color_bird_group.add(color_bird_white)
+color_bird_black = Color_bird('black', (WIDTH_SCREEN/4)*3-100, 100)
+color_bird_group.add(color_bird_black)
+color_bird_pink = Color_bird('pink', WIDTH_SCREEN/4, 250)
+color_bird_group.add(color_bird_pink)
+color_bird_green = Color_bird('green', (WIDTH_SCREEN/4)*3-100, 250)
+color_bird_group.add(color_bird_green)
 
 personalize_button_group = pygame.sprite.Group()
 personalize_button = Personalize_button()
@@ -395,7 +347,7 @@ while True:
         pipe_group.remove(pipe_group.sprites()[0])
 
         pipes = get_random_pipes(WIDTH_SCREEN * 2 - 30)
-
+ 
         pipe_group.add(pipes[0])
         pipe_group.add(pipes[1])
         
@@ -424,12 +376,18 @@ while True:
                 personalize_bird_group.empty()
                 personalize_background_group.empty()
                 
-                black_bird_group.draw(screen)
-                black_bird_group.update()
-                white_bird_group.draw(screen)
-                white_bird_group.update()
-                pink_bird_group.draw(screen)
-                pink_bird_group.update()
+                color_bird_group.draw(screen)
+                color_bird_group.update()
+                if not PERSONALIZE:
+                    bird_group.empty()
+                    bird = Bird()
+                    bird_group.add(bird)
+                    personalize_button = Personalize_button()
+                    personalize_button_group.add(personalize_button)
+                    personalize_bird = Personalize_bird()
+                    personalize_bird_group.add(personalize_bird)
+                    personalize_background = Personalize_background()
+                    personalize_background_group.add(personalize_background)
                 
             elif PERSONALIZE_BACKGROUND:
                 screen.fill((255,255,255))
