@@ -24,8 +24,10 @@ BACKGROUND = pygame.transform.scale(BACKGROUND, (WIDTH_SCREEN, HEIGHT_SCREEN))
 
 colide_sound = pygame.mixer.Sound('assets/audio/hit.wav')
 bump_sound = pygame.mixer.Sound('assets/audio/wing.wav')
+score_sound = pygame.mixer.Sound('assets/audio/score.wav')
 colide_sound.set_volume(0.1)
 bump_sound.set_volume(0.1)
+score_sound.set_volume(0.1)
 
 START = False
 PERSONALIZE = False
@@ -390,10 +392,10 @@ while True:
         pipe_group.add(pipes[1])
         
     if position(pipe_group.sprites()[0]) == (WIDTH_SCREEN/2-40):
-        point_group.update()
+        score_group.update()
         colide_sound.play() 
     
-    point_group.draw(screen)
+    score_group.draw(screen)
     
     pipe_group.draw(screen)
     ground_group.draw(screen)
@@ -408,7 +410,7 @@ while True:
         pipe_group.update()
 
         bird_group.draw(screen)
-        point_group.draw(screen)
+        score_group.draw(screen)
     else:
         if PERSONALIZE:
             personalize_button_group.empty()
