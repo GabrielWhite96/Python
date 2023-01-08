@@ -134,7 +134,7 @@ class Personalize_button(pygame.sprite.Sprite):
             if self.mouse[0]:
                 PERSONALIZE = True
         
-class Point(pygame.sprite.Sprite):
+class Score(pygame.sprite.Sprite):
     
     def __init__(self, width, height,first,second,third):
         pygame.sprite.Sprite.__init__(self)
@@ -151,10 +151,10 @@ class Point(pygame.sprite.Sprite):
                        pygame.image.load('assets/sprites/9.png')]
         
         # self.current_image = 0
-        self.point_cont = 0
-        self.point_aux1 = 0
-        self.point_aux2 = 0
-        self.point_aux3 = 0
+        self.score_cont = 0
+        self.score_aux1 = 0
+        self.score_aux2 = 0
+        self.score_aux3 = 0
         
         self.first_number = first
         self.second_number = second
@@ -170,27 +170,27 @@ class Point(pygame.sprite.Sprite):
     def update(self):
         # self.current_image += 1
         # self.image = self.images[ self.current_image ]
-        self.point_cont += 1
+        self.score_cont += 1
         
         if self.first_number:
-            if self.point_cont%100 == 0:
-                self.point_aux1 += 1
-                self.image = self.images[self.point_aux1]
-                if self.point_aux2 == 9:
-                    self.point_aux2 = -1
+            if self.score_cont%100 == 0:
+                self.score_aux1 += 1
+                self.image = self.images[self.score_aux1]
+                if self.score_aux2 == 9:
+                    self.score_aux2 = -1
                 
         if self.second_number:
-            if self.point_cont%10 == 0:                    
-                self.point_aux2 += 1
-                self.image = self.images[self.point_aux2]
-                if self.point_aux2 == 9:
-                    self.point_aux2 = -1
+            if self.score_cont%10 == 0:                    
+                self.score_aux2 += 1
+                self.image = self.images[self.score_aux2]
+                if self.score_aux2 == 9:
+                    self.score_aux2 = -1
                 
         if self.third_number:
-            self.point_aux3 += 1
-            self.image = self.images[self.point_aux3]
-            if self.point_aux3 == 9:
-                    self.point_aux3 = -1
+            self.score_aux3 += 1
+            self.image = self.images[self.score_aux3]
+            if self.score_aux3 == 9:
+                    self.score_aux3 = -1
         
 
 def select_bird():
@@ -276,19 +276,22 @@ class Ground(pygame.sprite.Sprite):
 def is_off_screen(sprite):
     return sprite.rect[0] < -(sprite.rect[2])
 
+def position(sprite):
+    return sprite.rect[0]
+
 def get_random_pipes(xpos):
     size = randint(150, 600)
     pipe = Pipe(False, xpos, size)
     pipe_inverted = Pipe(True, xpos, HEIGHT_SCREEN - size - PIPE_GAP)
     return (pipe, pipe_inverted)
 
-point_group = pygame.sprite.Group()
-first_number = Point(0, 0, True, False, False)
-point_group.add(first_number)
-second_number = Point(30, 0, False, True, False)
-point_group.add(second_number)
-third_number = Point(60, 0, False, False, True)
-point_group.add(third_number)
+score_group = pygame.sprite.Group()
+first_number = Score(0, 0, True, False, False)
+score_group.add(first_number)
+second_number = Score(30, 0, False, True, False)
+score_group.add(second_number)
+third_number = Score(60, 0, False, False, True)
+score_group.add(third_number)
 
 color_bird_group = pygame.sprite.Group()
 color_bird_white = Color_bird('white', WIDTH_SCREEN/4-25, 100)
@@ -386,10 +389,11 @@ while True:
         pipe_group.add(pipes[0])
         pipe_group.add(pipes[1])
         
-    if 
+    if position(pipe_group.sprites()[0]) == (WIDTH_SCREEN/2-40):
+        point_group.update()
+        colide_sound.play() 
     
     point_group.draw(screen)
-    point_group.update()    
     
     pipe_group.draw(screen)
     ground_group.draw(screen)
@@ -404,6 +408,7 @@ while True:
         pipe_group.update()
 
         bird_group.draw(screen)
+        point_group.draw(screen)
     else:
         if PERSONALIZE:
             personalize_button_group.empty()
