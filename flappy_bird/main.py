@@ -27,7 +27,7 @@ bump_sound = pygame.mixer.Sound('assets/audio/wing.wav')
 score_sound = pygame.mixer.Sound('assets/audio/score.wav')
 colide_sound.set_volume(0.1)
 bump_sound.set_volume(0.1)
-score_sound.set_volume(0.1)
+score_sound.set_volume(0.2)
 
 START = False
 PERSONALIZE = False
@@ -288,11 +288,11 @@ def get_random_pipes(xpos):
     return (pipe, pipe_inverted)
 
 score_group = pygame.sprite.Group()
-first_number = Score(0, 0, True, False, False)
+first_number = Score((WIDTH_SCREEN/2-40), 10, True, False, False)
 score_group.add(first_number)
-second_number = Score(30, 0, False, True, False)
+second_number = Score((WIDTH_SCREEN/2-12), 10, False, True, False)
 score_group.add(second_number)
-third_number = Score(60, 0, False, False, True)
+third_number = Score((WIDTH_SCREEN/2+16), 10, False, False, True)
 score_group.add(third_number)
 
 color_bird_group = pygame.sprite.Group()
@@ -338,6 +338,14 @@ def restart_game():
     bird_group.empty()
     ground_group.empty()
     pipe_group.empty()
+    score_group.empty()
+    
+    first_number = Score((WIDTH_SCREEN/2-40), 10, True, False, False)
+    score_group.add(first_number)
+    second_number = Score((WIDTH_SCREEN/2-12), 10, False, True, False)
+    score_group.add(second_number)
+    third_number = Score((WIDTH_SCREEN/2+16), 10, False, False, True)
+    score_group.add(third_number)
     
     personalize_button = Personalize_button()
     personalize_button_group.add(personalize_button)
@@ -393,9 +401,7 @@ while True:
         
     if position(pipe_group.sprites()[0]) == (WIDTH_SCREEN/2-40):
         score_group.update()
-        colide_sound.play() 
-    
-    score_group.draw(screen)
+        score_sound.play() 
     
     pipe_group.draw(screen)
     ground_group.draw(screen)
@@ -409,6 +415,7 @@ while True:
         ground_group.update()
         pipe_group.update()
 
+        score_group.draw(screen)
         bird_group.draw(screen)
         score_group.draw(screen)
     else:
