@@ -24,7 +24,7 @@ BACKGROUND = pygame.transform.scale(BACKGROUND, (WIDTH_SCREEN, HEIGHT_SCREEN))
 
 colide_sound = pygame.mixer.Sound('assets/audio/hit.wav')
 bump_sound = pygame.mixer.Sound('assets/audio/wing.wav')
-score_sound = pygame.mixer.Sound('assets/audio/score.wav')
+score_sound = pygame.mixer.Sound('assets/audio/score1.wav')
 colide_sound.set_volume(0.1)
 bump_sound.set_volume(0.1)
 score_sound.set_volume(0.2)
