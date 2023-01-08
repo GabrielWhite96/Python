@@ -37,7 +37,7 @@ COLOR_BIRD = 'white'
 PERSONALIZE_BACKGROUND = False
 DIED = False
 FALLING_SPEED = 10
-GRAVITY = 1
+GRAVITY = 1.4
 GAME_SPEED = 5
 
 GROUND_WIDTH = 2 * WIDTH_SCREEN
@@ -46,9 +46,6 @@ GROUND_HEIGHT = 100
 PIPE_WIDTH = 80
 PIPE_HEIGHT = 500
 PIPE_GAP = 150
-
-# pygame.time.set_timer(pygame.TIMER, 1000)
-# if event.type == pygame.TIMER:
 
 class Color_bird(pygame.sprite.Sprite):
     
@@ -139,7 +136,7 @@ class Personalize_button(pygame.sprite.Sprite):
         
 class Point(pygame.sprite.Sprite):
     
-    def __init__(self):
+    def __init__(self, width, height,first,second,third):
         pygame.sprite.Sprite.__init__(self)
         
         self.images = [pygame.image.load('assets/sprites/0.png'),
@@ -153,19 +150,48 @@ class Point(pygame.sprite.Sprite):
                        pygame.image.load('assets/sprites/8.png'),
                        pygame.image.load('assets/sprites/9.png')]
         
-        self.current_image = 0
-        self.point_aux = 0
+        # self.current_image = 0
+        self.point_cont = 0
+        self.point_aux1 = 0
+        self.point_aux2 = 0
+        self.point_aux3 = 0
+        
+        self.first_number = first
+        self.second_number = second
+        self.third_number = third
         
         self.image = pygame.image.load('assets/sprites/0.png')
+        self.mask = pygame.mask.from_surface(self.image)
         
         self.rect = self.image.get_rect()
-        self.rect[0] = WIDTH_SCREEN / 4
+        self.rect[0] = width
+        self.rect[1] = height
         
     def update(self):
-        self.current_image = self.current_image + 1
-        self.image = self.images[ self.current_image ]
-        if self.current_image == 9:
-            self.point_aux = self.point_aux + 1
+        # self.current_image += 1
+        # self.image = self.images[ self.current_image ]
+        self.point_cont += 1
+        
+        if self.first_number:
+            if self.point_cont%100 == 0:
+                self.point_aux1 += 1
+                self.image = self.images[self.point_aux1]
+                if self.point_aux2 == 9:
+                    self.point_aux2 = -1
+                
+        if self.second_number:
+            if self.point_cont%10 == 0:                    
+                self.point_aux2 += 1
+                self.image = self.images[self.point_aux2]
+                if self.point_aux2 == 9:
+                    self.point_aux2 = -1
+                
+        if self.third_number:
+            self.point_aux3 += 1
+            self.image = self.images[self.point_aux3]
+            if self.point_aux3 == 9:
+                    self.point_aux3 = -1
+        
 
 def select_bird():
     if COLOR_BIRD == 'white':
@@ -256,19 +282,22 @@ def get_random_pipes(xpos):
     pipe_inverted = Pipe(True, xpos, HEIGHT_SCREEN - size - PIPE_GAP)
     return (pipe, pipe_inverted)
 
-# point_group = pygame.sprite.Group()
-# for i in range(2):
-#     point = Point()
-#     point_group.add(point[0])
-#     point_group.add(point[1])
+point_group = pygame.sprite.Group()
+first_number = Point(0, 0, True, False, False)
+point_group.add(first_number)
+second_number = Point(30, 0, False, True, False)
+point_group.add(second_number)
+third_number = Point(60, 0, False, False, True)
+point_group.add(third_number)
+
 color_bird_group = pygame.sprite.Group()
-color_bird_white = Color_bird('white', WIDTH_SCREEN/4, 100)
+color_bird_white = Color_bird('white', WIDTH_SCREEN/4-25, 100)
 color_bird_group.add(color_bird_white)
-color_bird_black = Color_bird('black', (WIDTH_SCREEN/4)*3-100, 100)
+color_bird_black = Color_bird('black', (WIDTH_SCREEN/4)*3-75, 100)
 color_bird_group.add(color_bird_black)
-color_bird_pink = Color_bird('pink', WIDTH_SCREEN/4, 250)
+color_bird_pink = Color_bird('pink', WIDTH_SCREEN/4-25, 250)
 color_bird_group.add(color_bird_pink)
-color_bird_green = Color_bird('green', (WIDTH_SCREEN/4)*3-100, 250)
+color_bird_green = Color_bird('green', (WIDTH_SCREEN/4)*3-75, 250)
 color_bird_group.add(color_bird_green)
 
 personalize_button_group = pygame.sprite.Group()
@@ -299,7 +328,7 @@ for i in range(2):
     pipe_group.add(pipes[1])
 
 def restart_game():
-    global bird_group, ground_group, pipe_group, bird, ground, pipes, DIED, START, personalize_button, personalize_button_group
+    global bird_group, ground_group, pipe_group, bird, ground, pipes, DIED, START, GAME_SPEED, personalize_button, personalize_button_group
     
     bird_group.empty()
     ground_group.empty()
@@ -321,6 +350,9 @@ def restart_game():
     
     DIED = False
     START = False
+    GAME_SPEED = 5
+
+# pygame.time.set_timer(pygame.USEREVENT, 10000)
 
 while True:
     clock.tick(30)
@@ -335,6 +367,9 @@ while True:
                 START = True
                 bump_sound.play()
                 bird.bump()
+                
+        # if event.type == pygame.USEREVENT:
+        #     GAME_SPEED += 1
                 
     if is_off_screen(ground_group.sprites()[0]):
         ground_group.remove(ground_group.sprites()[0])
@@ -351,6 +386,11 @@ while True:
         pipe_group.add(pipes[0])
         pipe_group.add(pipes[1])
         
+    if 
+    
+    point_group.draw(screen)
+    point_group.update()    
+    
     pipe_group.draw(screen)
     ground_group.draw(screen)
     personalize_button_group.draw(screen)
