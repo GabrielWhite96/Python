@@ -138,7 +138,7 @@ class Personalize_button(pygame.sprite.Sprite):
         
 class Score(pygame.sprite.Sprite):
     
-    def __init__(self, width, height,first,second,third):
+    def __init__(self, width, height, first, second, third):
         pygame.sprite.Sprite.__init__(self)
         
         self.images = [pygame.image.load('assets/sprites/0.png'),
@@ -177,16 +177,16 @@ class Score(pygame.sprite.Sprite):
         if self.first_number:
             if self.score_cont%100 == 0:
                 self.score_aux1 += 1
+                if self.score_aux1 == 10:
+                    self.score_aux1 = 0
                 self.image = self.images[self.score_aux1]
-                if self.score_aux2 == 9:
-                    self.score_aux2 = -1
                 
         if self.second_number:
             if self.score_cont%10 == 0:                    
                 self.score_aux2 += 1
+                if self.score_aux2 == 10:
+                    self.score_aux2 = 0
                 self.image = self.images[self.score_aux2]
-                if self.score_aux2 == 9:
-                    self.score_aux2 = -1
                 
         if self.third_number:
             self.score_aux3 += 1
