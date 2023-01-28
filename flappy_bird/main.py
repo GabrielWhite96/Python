@@ -13,11 +13,6 @@ screen = pygame.display.set_mode((WIDTH_SCREEN, HEIGHT_SCREEN))
 
 pygame.display.set_caption('Flappy Bird')
 
-'''
-fefaefasd
-
-'''
-
 MENU = pygame.image.load('assets/sprites/message.png')
 GAME_OVER = pygame.image.load('assets/sprites/gameover.png')
 BACKGROUND = pygame.image.load('assets/sprites/background-day.png')
