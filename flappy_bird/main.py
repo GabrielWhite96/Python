@@ -398,8 +398,6 @@ def restart_game():
 
 # pygame.time.set_timer(pygame.USEREVENT, 10000)
 
-print(personalize_button_group)
-
 while True:
     clock.tick(30)
     screen.blit(BACKGROUND, (0, 0))
