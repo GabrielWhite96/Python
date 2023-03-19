@@ -1,7 +1,10 @@
-import pygame, sys
-from settings import *
-from pygame.image import load
+import sys
+
+import pygame
 from editor import Editor
+from pygame.image import load
+from settings import *
+
 
 class Main:
     def __init__(self):
@@ -12,7 +15,7 @@ class Main:
         self.editor = Editor()
         
         # cursor
-        surf = load("C:/Users/gabri/Documents/Estudos/Python/PirateMaker/graphics/cursors/mouse.png").convert_alpha()
+        surf = load("graphics/cursors/mouse.png").convert_alpha()
         cursor = pygame.cursors.Cursor((0,0), surf)
         pygame.mouse.set_cursor(cursor)
         
