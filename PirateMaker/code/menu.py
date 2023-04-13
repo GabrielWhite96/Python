@@ -16,7 +16,7 @@ class Menu:
         self.menu_surfs = {}
         for key, value in EDITOR_DATA.items():
             if value['menu']:
-                if not value['menu'] in self.menu_surfs:
+                if value['menu'] not in self.menu_surfs:
                     self.menu_surfs[value['menu']] = [(key, load(value['menu_surf']))]
                 else:
                     self.menu_surfs[value['menu']].append((key, load(value['menu_surf'])))

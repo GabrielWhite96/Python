@@ -55,7 +55,7 @@ class Color_bird(pygame.sprite.Sprite):
     def __init__(self, color, width, height):
         pygame.sprite.Sprite.__init__(self)
 
-        self.image = pygame.image.load('assets/sprites/'+color+'_bird.png')
+        self.image = pygame.image.load(f'assets/sprites/{color}_bird.png')
         self.image = pygame.transform.scale(self.image, (100, 100))
         self.rect = self.image.get_rect()
 
@@ -69,11 +69,10 @@ class Color_bird(pygame.sprite.Sprite):
         self.mouse = pygame.mouse.get_pressed()
         self.mousePos = pygame.mouse.get_pos()
 
-        if self.rect.collidepoint(self.mousePos):
-            if self.mouse[0]:
-                COLOR_BIRD = self.color
-                PERSONALIZE = False
-                PERSONALIZE_BIRD = False
+        if self.rect.collidepoint(self.mousePos) and self.mouse[0]:
+            COLOR_BIRD = self.color
+            PERSONALIZE = False
+            PERSONALIZE_BIRD = False
 
 
 class Personalize_bird(pygame.sprite.Sprite):
@@ -95,14 +94,12 @@ class Personalize_bird(pygame.sprite.Sprite):
 
     def update(self):
         global PERSONALIZE_BIRD
-        PERSONALIZE_BIRD = True
 
-        # self.mouse = pygame.mouse.get_pressed()
-        # self.mousePos = pygame.mouse.get_pos()
+        self.mouse = pygame.mouse.get_pressed()
+        self.mousePos = pygame.mouse.get_pos()
 
-        # if self.rect.collidepoint(self.mousePos):
-        #     if self.mouse[0]:
-        #         PERSONALIZE_BIRD = True
+        if self.rect.collidepoint(self.mousePos) and self.mouse[0]:
+            PERSONALIZE_BIRD = True
 
 
 class Personalize_background(pygame.sprite.Sprite):
@@ -124,9 +121,8 @@ class Personalize_background(pygame.sprite.Sprite):
         self.mouse = pygame.mouse.get_pressed()
         self.mousePos = pygame.mouse.get_pos()
 
-        if self.rect.collidepoint(self.mousePos):
-            if self.mouse[0]:
-                PERSONALIZE_BACKGROUND = True
+        if self.rect.collidepoint(self.mousePos) and self.mouse[0]:
+            PERSONALIZE_BACKGROUND = True
 
 
 class Personalize_button(pygame.sprite.Sprite):
@@ -148,9 +144,10 @@ class Personalize_button(pygame.sprite.Sprite):
         self.mouse = pygame.mouse.get_pressed()
         self.mousePos = pygame.mouse.get_pos()
 
-        if self.rect.collidepoint(self.mousePos):
-            if self.mouse[0]:
-                PERSONALIZE = True
+        if self.rect.collidepoint(self.mousePos) and self.mouse[0]:
+            PERSONALIZE = True
+            
+        if event.type() == pygame.mouse.
 
 
 class Score(pygame.sprite.Sprite):
@@ -191,19 +188,17 @@ class Score(pygame.sprite.Sprite):
         # self.image = self.images[ self.current_image ]
         self.score_cont += 1
 
-        if self.first_number:
-            if self.score_cont % 100 == 0:
-                self.score_aux1 += 1
-                if self.score_aux1 == 10:
-                    self.score_aux1 = 0
-                self.image = self.images[self.score_aux1]
+        if self.first_number and self.score_cont % 100 == 0:
+            self.score_aux1 += 1
+            if self.score_aux1 == 10:
+                self.score_aux1 = 0
+            self.image = self.images[self.score_aux1]
 
-        if self.second_number:
-            if self.score_cont % 10 == 0:
-                self.score_aux2 += 1
-                if self.score_aux2 == 10:
-                    self.score_aux2 = 0
-                self.image = self.images[self.score_aux2]
+        if self.second_number and self.score_cont % 10 == 0:
+            self.score_aux2 += 1
+            if self.score_aux2 == 10:
+                self.score_aux2 = 0
+            self.image = self.images[self.score_aux2]
 
         if self.third_number:
             self.score_aux3 += 1
@@ -223,8 +218,7 @@ class Bird(pygame.sprite.Sprite):
 
         self.current_image = 0
 
-        self.image = pygame.image.load(
-            'assets//sprites//white1.png').convert_alpha()
+        self.image = pygame.image.load('assets//sprites//white1.png').convert_alpha()
         self.mask = pygame.mask.from_surface(self.image)
 
         self.rect = self.image.get_rect()
@@ -398,6 +392,7 @@ def restart_game():
 
 # pygame.time.set_timer(pygame.USEREVENT, 10000)
 
+# sourcery skip: merge-else-if-into-elif, merge-nested-ifs, swap-nested-ifs
 while True:
     clock.tick(30)
     screen.blit(BACKGROUND, (0, 0))
@@ -412,11 +407,6 @@ while True:
                 START = True
                 bump_sound.play()
                 bird.bump()
-
-        if event.type == MOUSEBUTTONDOWN:
-            if personalize_bird_group.sprites()[0].rect[0] <= mouse[0] and mouse[0] <= personalize_bird_group.sprites()[0].rect[0]+100 and personalize_bird_group.sprites()[0].rect[1] <= mouse[1] and mouse[1] <= personalize_bird_group.sprites()[0].rect[1]+100:
-                personalize_bird_group.update()
-                # screen.fill((255,255,255))
 
         # if event.type == pygame.USEREVENT:
         #     GAME_SPEED += 1
@@ -444,7 +434,7 @@ while True:
     ground_group.draw(screen)
     personalize_button_group.draw(screen)
     personalize_button_group.update()
-
+    
     if START:
         personalize_button_group.empty()
 
@@ -460,7 +450,7 @@ while True:
             personalize_button_group.empty()
             personalize_bird_group.draw(screen)
             personalize_background_group.draw(screen)
-            # personalize_bird_group.update()
+            personalize_bird_group.update()
             personalize_background_group.update()
 
             if PERSONALIZE_BIRD:
