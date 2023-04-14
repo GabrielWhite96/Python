@@ -147,7 +147,7 @@ class Personalize_button(pygame.sprite.Sprite):
         if self.rect.collidepoint(self.mousePos) and self.mouse[0]:
             PERSONALIZE = True
             
-        if event.type() == pygame.mouse.
+        # if event.type() == pygame.mouse.
 
 
 class Score(pygame.sprite.Sprite):
@@ -270,8 +270,7 @@ class Ground(pygame.sprite.Sprite):
     def __init__(self, xpos):
         pygame.sprite.Sprite.__init__(self)
 
-        self.image = pygame.image.load(
-            'assets/sprites/base.png').convert_alpha()
+        self.image = pygame.image.load('assets/sprites/base.png').convert_alpha()
         self.image = pygame.transform.scale(
             self.image, (GROUND_WIDTH, GROUND_HEIGHT))
 
