@@ -17,5 +17,5 @@ class Dice:
         return self.__rolled_dice
     
 if __name__ == '__main__':
-    dice = Dice(6)
+    dice = Dice(3)
     print(dice.dice())
