@@ -4,7 +4,7 @@ from PyQt5.QtGui import QPainter, QPen, QPixmap, QIcon
 from PyQt5.QtCore import Qt
 
 class PaintApp(QMainWindow):
-    
+    button_info = []
     def __init__(self):
         super().__init__()
         self.initUI()
@@ -78,11 +78,9 @@ class Canvas(QWidget):
             painter = QPainter(self.canvas)
             painter.setPen(self.pen)
             painter.setBrush(self.pen.color())
-            if self.parent().drawing_mode:
-                painter.drawEllipse(event.pos(), self.brush_size, self.brush_size)
-            else:
+            if not self.parent().drawing_mode:
                 self.pen.setColor(Qt.white)
-                painter.drawEllipse(event.pos(), self.brush_size, self.brush_size)
+            painter.drawEllipse(event.pos(), self.brush_size, self.brush_size)
             self.update()
             self.last_point = event.pos()
 
