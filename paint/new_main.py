@@ -1,16 +1,16 @@
 import sys
 from PyQt6 import QtGui
-from PyQt6.QtWidgets import QApplication, QLabel, QVBoxLayout, QHBoxLayout, QWidget, QPushButton
+from PyQt6.QtWidgets import QApplication, QLabel, QVBoxLayout, QHBoxLayout, QWidget, QPushButton, QComboBox, QSpacerItem, QSizePolicy
 from PyQt6.QtGui import QPixmap, QPainter, QPen, QColor, QIcon
-from PyQt6.QtCore import Qt, QSize  
+from PyQt6.QtCore import Qt, QSize
 from collections import deque
 
 class PaintApp(QWidget):
     def __init__(self):
         super().__init__()
 
-        self.__layout = QVBoxLayout()
-        self.__options_layout = QHBoxLayout()
+        self.__layout = QHBoxLayout()
+        self.__options_layout = QVBoxLayout()
         self.__screen_label = QLabel()
 
         self.__shapes = deque()
@@ -30,10 +30,42 @@ class PaintApp(QWidget):
         self.create_button('icons/brushW.png', lambda: self.set_selected_action('Pencil'))
         self.create_button('icons/eraserW.png', lambda: self.set_selected_action('Eraser'))
         self.create_button('icons/squareW.png', lambda: self.set_selected_action('Square'))
-        self.create_button('icons/lineW.png', lambda: self.set_selected_action('Rect'))
+        self.create_button('icons/lineW.png', lambda: self.set_selected_action('Line'))
         self.create_button('icons/triangleW.png', lambda: self.set_selected_action('Triangle'))
-        self.create_button('icons/colorsW.png', lambda: self.set_selected_action('Circle'))
-        self.create_button('icons/sizeW.png', lambda: self.set_selected_action('Circle'))
+        self.create_button('icons/circleW.png', lambda: self.set_selected_action('Circle'))
+        self.create_button('icons/colorsW.png', lambda: self.set_selected_action('Colors'))
+        self.create_button('icons/sizeW.png', self.toggle_size_combobox)
+        
+        spacer = QSpacerItem(0, 0, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
+        self.__options_layout.addItem(spacer)
+        
+        self.size_combobox = QComboBox()
+        self.size_combobox.addItems(['2', '4', '6', '8', '10'])
+        self.size_combobox.currentIndexChanged.connect(self.update_pencil_size)
+        self.size_combobox.hide()  # Inicialmente oculta o combobox
+        self.size_combobox.setStyleSheet("""
+            QComboBox {
+                background-color: #1f1f1f;
+                color: white;
+                border: none;
+                border-radius: 4px;
+                padding: 10px;
+                font-size: 15px;
+                width: 100%;
+            }
+            
+            QComboBox:hover {
+                background-color: #555; 
+            }
+        """)
+        
+    def toggle_size_combobox(self):
+        self.size_combobox.hide() if self.size_combobox.isVisible() else self.size_combobox.show()
+
+    def update_pencil_size(self, index):
+        size = self.size_combobox.itemText(index)
+        self.__selected_pencil_width = int(size)
+        self.toggle_size_combobox()  # Oculta o combobox após a seleção
 
     def pencil_action(self, current_x, current_y):
         if self.__last_x is None:
@@ -126,8 +158,8 @@ class PaintApp(QWidget):
         painter.end()
 
     def mouseMoveEvent(self, event):
-        current_x = int(event.position().x()) - 10
-        current_y = int(event.position().y()) - 40
+        current_x = int(event.position().x()) - 52
+        current_y = int(event.position().y()) - 12
 
         self.__drawing = True
 
@@ -179,15 +211,14 @@ class PaintApp(QWidget):
                 color: white;
                 border: none;
                 border-radius: 4px;
-                padding: 10px;
-                transition: 200ms
+                padding: 6px;
             }
             
             QPushButton:hover {
                 background-color: #555; 
             }
         """)
-        button.setIconSize(QSize(25, 25))
+        button.setIconSize(QSize(20, 20))
         button.clicked.connect(func)
         self.__options_layout.addWidget(button)
 
